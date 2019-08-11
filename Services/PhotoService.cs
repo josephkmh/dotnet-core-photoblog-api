@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 
 namespace PhotoBlogApi.Services
 {
-  public interface IPhotoService
-  {
-    Task<Photo> AddPhoto(Photo photo);
-    Task<Photo> UpdatePhoto(long id, Photo photo);
-  }
-
-  class PhotoService : IPhotoService
-  {
-    private DataContext _context;
-
-    public PhotoService(DataContext context)
+    public interface IPhotoService
     {
-      _context = context;
+        Task<Photo> AddPhoto(Photo photo);
+        Task<Photo> UpdatePhoto(long id, Photo photo);
     }
 
-    public async Task<Photo> AddPhoto(Photo photo)
+    class PhotoService : IPhotoService
     {
-      _context.Photos.Add(photo);
-      await _context.SaveChangesAsync();
+        private DataContext _context;
 
-      return photo;
+        public PhotoService(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Photo> AddPhoto(Photo photo)
+        {
+            _context.Photos.Add(photo);
+            await _context.SaveChangesAsync();
+
+            return photo;
+        }
+
+        public async Task<Photo> UpdatePhoto(long id, Photo photo)
+        {
+
+            _context.Entry(photo).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return photo;
+        }
     }
-
-    public async Task<Photo> UpdatePhoto(long id, Photo photo)
-    {
-
-      _context.Entry(photo).State = EntityState.Modified;
-      await _context.SaveChangesAsync();
-
-      return photo;
-    }
-  }
 }
